@@ -1,0 +1,456 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#04070a" />
+  <meta name="description" content="Volume Society Macro Space — a cool, transparent macro cockpit for US yields, curve, real rates, financial conditions, volatility and the economic calendar." />
+  <title>Volume Society Macro Space</title>
+  <link rel="preconnect" href="https://fred.stlouisfed.org" />
+  <link rel="stylesheet" href="assets/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23070c10'/%3E%3Cpath d='M12 40c8-16 14 6 22-8s10-2 18-12' fill='none' stroke='%236fe7dd' stroke-width='4' stroke-linecap='round'/%3E%3Ccircle cx='49' cy='20' r='4' fill='%239be8ff'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <div class="bg-aurora" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="noise" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Volume Society Macro Space home">
+      <svg class="brand-mark" viewBox="0 0 48 48" aria-hidden="true">
+        <defs>
+          <linearGradient id="markGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#6fe7dd" />
+            <stop offset="1" stop-color="#9be8ff" />
+          </linearGradient>
+        </defs>
+        <rect x="1" y="1" width="46" height="46" rx="14" fill="rgba(111,231,221,.05)" stroke="rgba(111,231,221,.28)" />
+        <path d="M9 31.5c5.8-12.4 10.6 3.6 16.8-5.6 5.3-7.8 7.8-2.4 13.2-9.4" fill="none" stroke="url(#markGrad)" stroke-width="2.6" stroke-linecap="round" />
+        <circle cx="39" cy="16.5" r="2.6" fill="#9be8ff" />
+      </svg>
+      <span class="brand-copy">
+        <span class="brand-top">VOLUME SOCIETY</span>
+        <span class="brand-bottom">MACRO SPACE</span>
+      </span>
+    </a>
+
+    <div class="topbar-right">
+      <div class="feed-status" id="feedStatus" title="Data feed status">
+        <span class="pulse-dot"></span>
+        <span id="feedStatusText">CONNECTING</span>
+      </div>
+      <div class="clock" id="clock">
+        <span id="clockDay">MON 02 NOV</span>
+        <span class="clock-sep">·</span>
+        <span id="clockTime">00:00:00</span>
+        <span class="clock-zone">ET</span>
+      </div>
+      <button class="icon-btn" id="refreshBtn" type="button" aria-label="Refresh data" title="Refresh data">
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20 11a8 8 0 1 0-.7 4.2M20 4v7h-7" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="masthead">
+      <div class="masthead-copy">
+        <div class="eyebrow">
+          <span class="eyebrow-line"></span>
+          US MACRO COCKPIT
+          <span class="eyebrow-tag">PUBLIC DATA</span>
+        </div>
+        <h1>See the <span class="grad-text">macro regime</span><br />before the tape does.</h1>
+        <p class="lede">
+          Yields, curve, real rates, financial conditions, volatility and the week's
+          releases — one transparent surface, refreshed from free public sources.
+        </p>
+      </div>
+
+      <aside class="regime-card glass" id="regimeCard">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">REGIME ENGINE</span>
+            <h2>Risk posture</h2>
+          </div>
+          <span class="live-pill"><span class="pulse-dot"></span> LIVE MODEL</span>
+        </div>
+
+        <div class="regime-body">
+          <div class="gauge-wrap">
+            <svg class="gauge" viewBox="0 0 220 132" aria-label="Regime score gauge">
+              <defs>
+                <linearGradient id="gaugeGrad" x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stop-color="#ff7a7a" />
+                  <stop offset=".5" stop-color="#ffc86b" />
+                  <stop offset="1" stop-color="#73e6a8" />
+                </linearGradient>
+              </defs>
+              <path d="M18 116a92 92 0 0 1 184 0" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="12" stroke-linecap="round" />
+              <path id="gaugeArc" d="M18 116a92 92 0 0 1 184 0" fill="none" stroke="url(#gaugeGrad)" stroke-width="12" stroke-linecap="round" stroke-dasharray="289" stroke-dashoffset="145" opacity=".9" />
+              <g id="gaugeTicks"></g>
+              <line id="gaugeNeedle" x1="110" y1="116" x2="110" y2="44" stroke="#e8f4f4" stroke-width="2" stroke-linecap="round" />
+              <circle cx="110" cy="116" r="5" fill="#070c10" stroke="#9be8ff" stroke-width="2" />
+            </svg>
+            <div class="gauge-label">
+              <strong id="regimeLabel">—</strong>
+              <span id="regimeScore">score 0.0</span>
+            </div>
+          </div>
+
+          <div class="regime-meta">
+            <p class="regime-read" id="regimeRead">Loading macro signals…</p>
+            <div class="signal-chips" id="signalChips"></div>
+          </div>
+        </div>
+
+        <div class="regime-foot">
+          <span id="regimeUpdated">Awaiting data</span>
+          <span class="regime-source">FRED · ST. LOUIS FED</span>
+        </div>
+      </aside>
+    </section>
+
+    <section class="metric-grid" id="metricGrid" aria-label="Key macro metrics"></section>
+
+    <section class="grid-main">
+      <article class="panel glass span-7" id="curvePanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">TERM STRUCTURE</span>
+            <h2>US Treasury curve</h2>
+          </div>
+          <div class="segmented" id="curveRange" role="group" aria-label="Curve comparison">
+            <button type="button" class="seg active" data-ago="0">Now</button>
+            <button type="button" class="seg" data-ago="30">1M ago</button>
+            <button type="button" class="seg" data-ago="365">1Y ago</button>
+          </div>
+        </div>
+        <div class="panel-sub">
+          <span id="curveSub">Par yields across the curve</span>
+          <span class="legend" id="curveLegend"></span>
+        </div>
+        <div class="chart chart-curve" id="curveChart"></div>
+        <div class="stat-strip" id="curveStats"></div>
+      </article>
+
+      <article class="panel glass span-5" id="ratesPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">RATES MATRIX</span>
+            <h2>Yield board</h2>
+          </div>
+          <span class="panel-note">Δ in bp</span>
+        </div>
+        <div class="table-wrap">
+          <table class="rates-table">
+            <thead>
+              <tr>
+                <th scope="col">Tenor</th>
+                <th scope="col">Yield</th>
+                <th scope="col">1D</th>
+                <th scope="col">1W</th>
+                <th scope="col">1M</th>
+                <th scope="col">1Y</th>
+              </tr>
+            </thead>
+            <tbody id="ratesBody"></tbody>
+          </table>
+        </div>
+        <div class="rates-foot" id="ratesFoot"></div>
+      </article>
+
+      <article class="panel glass span-7" id="realPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">REAL RATES</span>
+            <h2>Nominal, real &amp; breakeven</h2>
+          </div>
+          <div class="segmented" id="realRange" role="group" aria-label="Real rate window">
+            <button type="button" class="seg" data-years="1">1Y</button>
+            <button type="button" class="seg active" data-years="3">3Y</button>
+            <button type="button" class="seg" data-years="5">5Y</button>
+          </div>
+        </div>
+        <div class="panel-sub">
+          <span>10Y decomposition — real yield + inflation compensation</span>
+          <span class="legend" id="realLegend"></span>
+        </div>
+        <div class="chart chart-real" id="realChart"></div>
+        <div class="decomp" id="realDecomp"></div>
+      </article>
+
+      <article class="panel glass span-5" id="conditionsPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">FINANCIAL CONDITIONS</span>
+            <h2>Chicago Fed NFCI</h2>
+          </div>
+          <span class="panel-note" id="nfciNote">0 = average</span>
+        </div>
+        <div class="chart chart-nfci" id="nfciChart"></div>
+        <div class="nfci-components" id="nfciComponents"></div>
+        <p class="fineprint">Negative = loose conditions. Positive = tighter than average.</p>
+      </article>
+
+      <article class="panel glass span-6" id="volPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">VOLATILITY</span>
+            <h2>VIX &amp; credit stress</h2>
+          </div>
+          <span class="regime-tag" id="volTag">—</span>
+        </div>
+        <div class="vol-top">
+          <div class="vol-quote">
+            <strong id="vixValue">—</strong>
+            <span id="vixDelta">—</span>
+          </div>
+          <div class="percentile">
+            <div class="percentile-head"><span>1Y percentile</span><strong id="vixPct">—</strong></div>
+            <div class="meter"><span id="vixMeter"></span></div>
+          </div>
+        </div>
+        <div class="chart chart-vol" id="vixChart"></div>
+        <div class="mini-row" id="volMini"></div>
+      </article>
+
+      <article class="panel glass span-6" id="policyPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">POLICY &amp; LIQUIDITY</span>
+            <h2>Money market pulse</h2>
+          </div>
+          <span class="panel-note" id="policyNote">—</span>
+        </div>
+        <div class="policy-grid" id="policyGrid"></div>
+        <div class="liquidity">
+          <div class="liq-item">
+            <span>Fed balance sheet</span>
+            <strong id="walclValue">—</strong>
+            <span class="liq-sub" id="walclSub">—</span>
+            <div class="spark" id="walclSpark"></div>
+          </div>
+          <div class="liq-item">
+            <span>Reverse repo</span>
+            <strong id="rrpValue">—</strong>
+            <span class="liq-sub" id="rrpSub">—</span>
+            <div class="spark" id="rrpSpark"></div>
+          </div>
+        </div>
+      </article>
+
+      <article class="panel glass span-12" id="sentimentPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">MACRO SENTIMENT</span>
+            <h2>Risk appetite by asset &amp; horizon</h2>
+          </div>
+          <span class="panel-note">DERIVED FROM RATES, CURVE, NFCI, VIX, LIQUIDITY</span>
+        </div>
+        <div class="panel-sub">
+          <span>Auto-generated from live macro. Rewrites as the data refreshes.</span>
+          <span class="legend">
+            <span><i style="color:var(--positive)"></i>Bullish</span>
+            <span><i style="color:var(--warn)"></i>Neutral</span>
+            <span><i style="color:var(--negative)"></i>Bearish</span>
+          </span>
+        </div>
+        <div class="macro-brief">
+          <div class="brief-top">
+            <span class="brief-label"><span class="pulse-dot"></span>AUTOMATED MACRO BRIEF</span>
+            <span class="brief-meta" id="briefMeta">—</span>
+          </div>
+          <p class="brief-text" id="briefText">Reading live macro…</p>
+        </div>
+        <div class="sentiment-grid">
+          <div class="sentiment-asset">
+            <div class="sentiment-head">
+              <div>
+                <span class="sentiment-label">NASDAQ (NDX)</span>
+                <span class="sentiment-sub">Growth / duration sensitive</span>
+              </div>
+              <span class="sentiment-score" id="sentNdqScore">—</span>
+            </div>
+            <div class="sentiment-row">
+              <div class="sentiment-time">
+                <span>Intraday</span>
+                <span class="sentiment-pill" id="sentNdqIntraday">—</span>
+              </div>
+              <div class="sentiment-time">
+                <span>Daily</span>
+                <span class="sentiment-pill" id="sentNdqDaily">—</span>
+              </div>
+              <div class="sentiment-time">
+                <span>Long-Term</span>
+                <span class="sentiment-pill" id="sentNdqLong">—</span>
+              </div>
+            </div>
+            <p class="sentiment-read" id="sentNdqRead">Reading live macro…</p>
+            <div class="sentiment-explain">
+              <div class="explain-title">Key drivers</div>
+              <ul class="explain-list" id="sentNdqExplain"></ul>
+            </div>
+          </div>
+          <div class="sentiment-asset">
+            <div class="sentiment-head">
+              <div>
+                <span class="sentiment-label">BITCOIN (BTC)</span>
+                <span class="sentiment-sub">Liquidity / risk beta</span>
+              </div>
+              <span class="sentiment-score" id="sentBtcScore">—</span>
+            </div>
+            <div class="sentiment-row">
+              <div class="sentiment-time">
+                <span>Intraday</span>
+                <span class="sentiment-pill" id="sentBtcIntraday">—</span>
+              </div>
+              <div class="sentiment-time">
+                <span>Daily</span>
+                <span class="sentiment-pill" id="sentBtcDaily">—</span>
+              </div>
+              <div class="sentiment-time">
+                <span>Long-Term</span>
+                <span class="sentiment-pill" id="sentBtcLong">—</span>
+              </div>
+            </div>
+            <p class="sentiment-read" id="sentBtcRead">Reading live macro…</p>
+            <div class="sentiment-explain">
+              <div class="explain-title">Key drivers</div>
+              <ul class="explain-list" id="sentBtcExplain"></ul>
+            </div>
+          </div>
+        </div>
+        <div class="sentiment-foot">
+          <span>Intraday reflects same-day/near-term liquidity &amp; vol. Daily weighs trend/credit. Long-term weighs curve, real yields &amp; liquidity.</span>
+          <span>Not financial advice.</span>
+        </div>
+      </article>
+
+      <article class="panel glass span-12" id="calendarPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">EVENT RISK</span>
+            <h2>Economic calendar</h2>
+          </div>
+          <div class="cal-controls">
+            <div class="segmented" id="calRegion" role="group" aria-label="Calendar region">
+              <button type="button" class="seg active" data-region="US">US only</button>
+              <button type="button" class="seg" data-region="ALL">Global</button>
+            </div>
+            <span class="panel-note" id="calSource">THIS WEEK</span>
+          </div>
+        </div>
+        <div class="cal-layout">
+          <div class="cal-list" id="calList"></div>
+          <aside class="cal-side">
+            <div class="next-event">
+              <span class="kicker">NEXT HIGH-IMPACT</span>
+              <strong id="nextEventTitle">—</strong>
+              <span id="nextEventWhen">—</span>
+              <div class="countdown" id="nextEventCountdown">—</div>
+            </div>
+            <div class="cal-legend">
+              <span><i class="dot high"></i> High</span>
+              <span><i class="dot medium"></i> Medium</span>
+              <span><i class="dot low"></i> Low</span>
+            </div>
+            <p class="fineprint">Times shown in your local timezone. Forecast / previous only — actual prints appear as they are released.</p>
+          </aside>
+        </div>
+      </article>
+
+      <article class="panel glass span-12" id="providersPanel">
+        <div class="panel-head">
+          <div>
+            <span class="kicker">DATA STACK</span>
+            <h2>Providers &amp; coverage</h2>
+          </div>
+          <span class="panel-note" id="providerSummary">CHECKING STATUS</span>
+        </div>
+        <div class="provider-grid">
+          <div class="provider-card" data-provider="fred">
+            <div class="provider-top">
+              <span class="provider-name">FRED</span>
+              <span class="provider-status live">LIVE</span>
+            </div>
+            <span class="provider-role">Macro · rates · credit</span>
+            <p>Federal Reserve Bank of St. Louis. Powers yields, the curve, real rates, NFCI, credit spreads, volatility and liquidity.</p>
+            <a href="https://fred.stlouisfed.org" target="_blank" rel="noopener">fred.stlouisfed.org ↗</a>
+          </div>
+
+          <div class="provider-card" data-provider="forexfactory">
+            <div class="provider-top">
+              <span class="provider-name">ForexFactory</span>
+              <span class="provider-status live">LIVE</span>
+            </div>
+            <span class="provider-role">Economic calendar</span>
+            <p>Weekly scheduled releases with forecasts, previous values, actual prints and impact levels.</p>
+            <a href="https://www.forexfactory.com/calendar" target="_blank" rel="noopener">forexfactory.com ↗</a>
+          </div>
+
+          <div class="provider-card" data-provider="tradier">
+            <div class="provider-top">
+              <span class="provider-name">Tradier</span>
+              <span class="provider-status key">KEY REQUIRED</span>
+            </div>
+            <span class="provider-role">Real-time SIP · options · Greeks · IV</span>
+            <p>Powers real-time SIP WebSocket and REST quotes, options chains, Greeks and implied volatility.</p>
+            <a href="https://tradier.com" target="_blank" rel="noopener">tradier.com ↗</a>
+          </div>
+
+          <div class="provider-card" data-provider="tiingo_iex">
+            <div class="provider-top">
+              <span class="provider-name">Tiingo &amp; IEX</span>
+              <span class="provider-status key">KEY REQUIRED</span>
+            </div>
+            <span class="provider-role">Supplementary market feeds</span>
+            <p>Used for supplementary market data feeds alongside the primary quote and options stack.</p>
+            <a href="https://www.tiingo.com" target="_blank" rel="noopener">tiingo.com ↗</a>
+          </div>
+
+          <div class="provider-card" data-provider="sec_edgar">
+            <div class="provider-top">
+              <span class="provider-name">SEC EDGAR</span>
+              <span class="provider-status free">FREE API</span>
+            </div>
+            <span class="provider-role">Fundamentals · filings · 13F</span>
+            <p>Sourced directly for fundamental data, company filings, financials and 13F institutional holdings.</p>
+            <a href="https://www.sec.gov/edgar" target="_blank" rel="noopener">sec.gov/edgar ↗</a>
+          </div>
+
+          <div class="provider-card" data-provider="finviz_financedatabase">
+            <div class="provider-top">
+              <span class="provider-name">Finviz &amp; FinanceDatabase</span>
+              <span class="provider-status attribution">ATTRIBUTION</span>
+            </div>
+            <span class="provider-role">Screening · ETF indexing</span>
+            <p>Utilized for specific screening tools and ETF indexing. Finviz has no official API; FinanceDatabase is an optional Python library.</p>
+            <a href="https://finviz.com" target="_blank" rel="noopener">finviz.com ↗</a>
+          </div>
+        </div>
+        <div class="provider-foot">
+          <span>Tradier, Tiingo and IEX activate when API keys are present in the environment. No keys are bundled.</span>
+          <span id="providerDetail">SEC EDGAR: free API · FinanceDatabase: optional package</span>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <div>
+        <span class="footer-brand">VOLUME SOCIETY <span>MACRO SPACE</span></span>
+        <p>Public-data macro cockpit. Built for context, not signals.</p>
+      </div>
+      <div class="footer-meta">
+        <span>Data: FRED · ForexFactory · Tradier · Tiingo/IEX · SEC EDGAR</span>
+        <span>Macro delayed · market feeds per config</span>
+        <span>Not investment advice</span>
+      </div>
+    </footer>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="assets/app.js"></script>
+</body>
+</html>
