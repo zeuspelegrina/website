@@ -1,0 +1,8 @@
+{
+  "name": "volume-society-macro-space",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@google/genai": "^1.0.0"
+  }
+}

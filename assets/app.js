@@ -1370,7 +1370,7 @@
       const foot = $('#agentFoot');
       if (foot) foot.textContent = data.mode === 'gemini'
         ? `GEMINI · ${data.model || 'FLASH'} · LIVE DASHBOARD CONTEXT · NOT INVESTMENT ADVICE`
-        : `LOCAL FALLBACK · SET GEMINI_API_KEY FOR LIVE GEMINI · NOT INVESTMENT ADVICE`;
+        : `LOCAL FALLBACK · GEMINI UNAVAILABLE · NOT INVESTMENT ADVICE`;
       setAgentState(data.mode);
     } else {
       botEl.textContent = reply;

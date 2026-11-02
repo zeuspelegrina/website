@@ -25,6 +25,14 @@ Requirements: Python 3.9+ and `curl`. No npm, Node, or API key needed. An
 optional `GEMINI_API_KEY` enables the Gemini macro agent; without it the agent
 runs a local fallback.
 
+## Deploying on Netlify
+
+The site deploys to Netlify as-is. The static files are served from the
+repo root, and `netlify/functions/api.mjs` provides the same `/api/*`
+endpoints as `server.py` as a Netlify Function. On Netlify the macro agent
+uses Gemini through Netlify AI Gateway, so it needs no API key. FRED and
+calendar responses are cached at the CDN (10 and 30 minutes).
+
 ## What is on the dashboard
 
 | Section | What it shows |
